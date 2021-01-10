@@ -66,34 +66,37 @@ async function getCompletedEbayItems(keywords, days, condition) {
   console.log("values from API, which are correct");
   console.log(requestedValueJson);
 
-  // fetch("http://localhost:3000/getPokemon")
-  //       .then(res => console.log(res))
-  //       .then(res => console.log("error in query"));
+  //this return the array of items :)
+  console.log(requestedValueJson.findItemsByKeywordsResponse[0].searchResult[0].item);
 
-  let responses = async() => {
-    const returnedItems = initialApiCall(uri)
-        .then(response => {
-          let pageCount = response.data.findCompletedItemsResponse[0].paginationOutput[0].totalPages[0];
-          // limit pagination to 50 from results
-          if (pageCount > 50){ pageCount = 50 };
+  const items = requestedValueJson.findItemsByKeywordsResponse[0].searchResult[0].item;
+
+  return items;
+
+  // let responses = async() => {
+  //   const returnedItems = initialApiCall(uri)
+  //       .then(response => {
+  //         let pageCount = response.data.findCompletedItemsResponse[0].paginationOutput[0].totalPages[0];
+  //         // limit pagination to 50 from results
+  //         if (pageCount > 50){ pageCount = 50 };
           
-          // let totalItems = response.data.findCompletedItemsResponse[0].paginationOutput[0].totalEntries[0];
-          // console.log('Total completed items: ' + totalItems);
-          // console.log('Paginated results: ' + pageCount);
+  //         // let totalItems = response.data.findCompletedItemsResponse[0].paginationOutput[0].totalEntries[0];
+  //         // console.log('Total completed items: ' + totalItems);
+  //         // console.log('Paginated results: ' + pageCount);
         
-          let promiseArray = [];
-          for (let i = 0; i < pageCount; i++) {
-            let pageNum = i + 1;
-            promiseArray.push(getPageItems(uri, pageNum));
-          }
-          return Promise.all(promiseArray);
-        })
-        .catch(err => {
-          console.log(err)
-        });
-    return returnedItems;
-  }
-  return await responses();
+  //         let promiseArray = [];
+  //         for (let i = 0; i < pageCount; i++) {
+  //           let pageNum = i + 1;
+  //           promiseArray.push(getPageItems(uri, pageNum));
+  //         }
+  //         return Promise.all(promiseArray);
+  //       })
+  //       .catch(err => {
+  //         console.log(err)
+  //       });
+  //   return returnedItems;
+  // }
+  // return await responses();
 }
 
 function setTimeframe(days){

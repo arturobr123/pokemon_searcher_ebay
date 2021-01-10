@@ -81,6 +81,9 @@ async function filteredResults(keywords, days, condition, listingType) {
     results = f.getCompletedFixedPrice(keywords, days, condition);
   }
 
+  //MY CHANGE
+  return  results;
+
   let items = [];
   await results.then(data=>{
     // getting back a lot of garbage with certain searches from eBay API

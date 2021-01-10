@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import gear from './gear.svg';
 import './App.css';
+import Items from "./components/Items";
 import * as dh from './data-helper';
 
 class App extends Component {
@@ -75,6 +76,7 @@ class NameForm extends Component {
               window.location.reload();
             }
           }>Cancel
+
           </button>
     </div>, document.getElementById('search-form'));
     
@@ -87,25 +89,9 @@ class NameForm extends Component {
     items
         .then(response => {
           if (response){
+            console.log("$$$$$$$$$$$$$$$$ app js");
             console.log(response);
-            const analysis = dh.thisDataHelper.returnAnalysis(response);
-            const resultsContent =
-                <div className="w3-card-4">
-        
-                  <header className="w3-container w3-blue">
-                    <h1>Results for "{analysis.keywords}"</h1>
-                  </header>
-        
-                  <div className="w3-container">
-                    <p># of Listings analyzed: {analysis.allItemsCount}</p>
-                    <p>Total # of Sales: {analysis.qtySold}</p>
-                    <p>Average Price: ${analysis.averagePrice.toFixed(2)}</p>
-                    <p>Percent Sold: {analysis.percentSold}</p>
-                    <p>Total $ Sold: ${analysis.totalSold.toFixed(2)}</p>
-                    <p>Date Range: {analysis.dateRange}</p>
-                  </div>
-      
-                </div>;
+            const resultsContent = <Items items={response}/>;
             ReactDOM.render(resultsContent, document.getElementById('results-display'));
             ReactDOM.render(
                 <div className="cancel-btn">
