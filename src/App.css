@@ -1,0 +1,209 @@
+.App {
+  text-align: center;
+}
+
+.loading-img {
+  animation: loading-img-spin infinite 5s linear;
+  height: 80px;
+  margin: 12px auto;
+}
+
+.App-header {
+  background-color: #303030;
+  height: 70px;
+  padding: 20px;
+  color: #dcdcdc;
+  font-weight: bold;
+}
+
+.App-intro {
+  font-size: 16px;
+}
+
+@keyframes loading-img-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+#searchForm {
+  text-align: center;
+}
+
+/*hr {*/
+    /*color: #4b4b4b;*/
+    /*width: 40%;*/
+    /*height: 30px;*/
+    /*border-style: solid;*/
+    /*border-color: #39383c;*/
+    /*border-width: 0 0 1px 0;*/
+    /*border-radius: 20px;*/
+    /*text-align: center;*/
+    /*margin: 0 auto;*/
+    /*margin-top: -1.2em;*/
+/*}*/
+.searchLabel {
+    font-family: Consolas, "Lucida Console", sans-serif;
+    font-size: 18px;
+    color: #0b5bb8;
+}
+
+.w3-input {
+    width: 75%;
+    text-align: center;
+    font-family: Consolas, "Lucida Console", sans-serif;
+    margin: 12px auto 12px;
+    font-size: 18px;
+}
+
+.App-h2 {
+    font-family: Consolas, "Lucida Console", sans-serif;
+    font-size: 22px;
+    margin: 0 auto 10px;
+}
+
+.w3-card-4 {
+    font-size: 12px;
+    width: 50%;
+    margin: 1rem auto;
+}
+
+.w3-container {
+    text-align: center;
+    margin: 0 auto;
+    position: relative;
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+.w3-container h1 {
+    font-size: 16px;
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+.loading-msg {
+    margin: 12px auto;
+    width: 50%;
+    text-align: center;
+    font-family: Consolas, "Lucida Console", sans-serif;
+    border: solid #4b4b4b;
+    border-radius: 8px 8px 8px 8px;
+}
+
+.loading-msg p {
+    margin: 0 auto;
+}
+
+.condition-disclaimer {
+    margin: 8px auto;
+    text-align: center;
+    font-style: italic;
+    font-size: 10px;
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+.groups {
+    margin: 0 auto;
+}
+
+.groups h4 {
+    font-weight: bold;
+}
+
+.left-grp, .mid-grp, .right-grp {
+    display: inline-block;
+}
+
+.control-group {
+    display: inline-block;
+    vertical-align: top;
+    background: #fff;
+    text-align: left;
+    box-shadow: 0 2px 24px rgba(0, 0, 0, 0.308);
+    padding-right: 20px;
+    padding-left: 24px;
+    padding-top: 12px;
+    width: 180px;
+    height: 240px;
+    margin: 10px;
+  }
+
+  .control {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .control input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+  }
+  .control__indicator {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background: #e6e6e6;
+  }
+  .control--radio .control__indicator {
+    border-radius: 50%;
+  }
+  .control:hover input ~ .control__indicator,
+  .control input:focus ~ .control__indicator {
+    background: #ccc;
+  }
+  .control input:checked ~ .control__indicator {
+    background: #2aa1c0;
+  }
+  .control:hover input:not([disabled]):checked ~ .control__indicator,
+  .control input:checked:focus ~ .control__indicator {
+    background: #2aa1c0;
+  }
+  .control input:disabled ~ .control__indicator {
+    background: #e6e6e6;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .control__indicator:after {
+    content: '';
+    position: absolute;
+    display: none;
+  }
+  .control input:checked ~ .control__indicator:after {
+    display: block;
+  }
+  .control--checkbox .control__indicator:after {
+    left: 8px;
+    top: 4px;
+    width: 3px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .control--checkbox input:disabled ~ .control__indicator:after {
+    border-color: #7b7b7b;
+  }
+  .control--radio .control__indicator:after {
+    left: 7px;
+    top: 7px;
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .control--radio input:disabled ~ .control__indicator:after {
+    background: #7b7b7b;
+  }
+
+
+.w3-button {
+    margin: 8px auto 12px;
+}
+
+.cancel-btn {
+    margin: 12px auto;
+    text-align: center;
+}
