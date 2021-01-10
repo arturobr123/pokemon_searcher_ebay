@@ -20,26 +20,7 @@ let getSingleItemUri = "https://open.api.ebay.com/shopping?callname=GetSingleIte
 "&appid=" + EBAY_APP_ID + 
 "&siteid=0" + 
 "&version=967" + 
-"&ItemID=353323119335";
-
-//MY CHANGES
-// let options = {
-//   'operation-name': 'findCompletedItems',
-//   'keywords': "charizard",
-//   'sortOrder': 'EndTimeSoonest'
-// };
-
-// const ebayEndpoint = axios.create({
-//   method: 'get',
-//   url: 'http://svcs.ebay.com/services/search/FindingService/v1',
-//   headers: {
-//     'X-EBAY-SOA-GLOBAL-ID': 'EBAY-US',
-//     'X-EBAY-SOA-RESPONSE-DATA-FORMAT': 'JSON',
-//     'X-EBAY-SOA-SECURITY-APPNAME': EBAY_APP_ID
-//   },
-//   headers: {'X-Requested-With': 'XMLHttpRequest'},
-//   });
-
+"&ItemID=353323119335"; //we need to pass this item id (we got this from previous query (baseUri))
 
 //RIGHT NOT IS NOT WORKING, BUT WHEN I SEARCH, IN THE CONSOLE, THE URL WILL BE LOG,
 //COPY THAT URL AND PASTE IT IN CHROME, I SHOULD SEE THE JSON RESULTS
@@ -74,8 +55,21 @@ async function getCompletedEbayItems(keywords, days, condition) {
   baseUri = baseUri + timeframe + conditionFilter + "&keywords=";
   keywords = keywords.replace(/ /g, '%20');
   let uri = baseUri + keywords;
+
+  //URIS which contain the corect JSON for each query
   console.log(`URI: ${uri}`);
   console.log(`URI to get single item: ${getSingleItemUri}`);
+
+  //THIS WORKS :)
+  const requestedValue = await fetch("http://localhost:3000/getPokemon");
+  const requestedValueJson = await requestedValue.json();
+  console.log("values from API, which are correct");
+  console.log(requestedValueJson);
+
+  // fetch("http://localhost:3000/getPokemon")
+  //       .then(res => console.log(res))
+  //       .then(res => console.log("error in query"));
+
   let responses = async() => {
     const returnedItems = initialApiCall(uri)
         .then(response => {
