@@ -30,9 +30,10 @@ class ItemInfo extends React.Component {
     // const { match } = this.props;
     // const { params } = match;
     
-    const data = await fetchItem();
+    const data = await fetchItem(this.props.itemID);
 
     console.log("data of one item");
+    console.log("ITEM ID:  " + this.props.itemID);
     console.log(data);
     console.log(data.Item);
 
