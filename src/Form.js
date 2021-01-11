@@ -1,0 +1,338 @@
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import gear from './gear.svg';
+import './App.css';
+import Items from './components/Items';
+import * as dh from './data-helper';
+
+const initialState = {
+  keywords: localStorage.getItem('Keywords') || '',
+  selectedOption: localStorage.getItem('SelectedOption') || 'New',
+  selectedType: localStorage.getItem('SelectedType') || 'Auction',
+  timeframe: localStorage.getItem('Timeframe') || '30',
+};
+
+class Form extends Component {
+  //<!-- STATES AND HANDLE STATE FUNCTIONS -->
+  constructor(props) {
+    super(props);
+    this.state = initialState;
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleConditionRadioChange = this.handleConditionRadioChange.bind(
+      this,
+    );
+    this.handleTypeRadioChange = this.handleTypeRadioChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleTimeframeRadioChange = this.handleTimeframeRadioChange.bind(
+      this,
+    );
+  }
+  handleInputChange(event) {
+    this.setState({ keywords: event.target.value });
+    localStorage.setItem('Keywords', event.target.value);
+  }
+  handleConditionRadioChange(event) {
+    this.setState({ selectedOption: event.target.value });
+    localStorage.setItem('SelectedOption', event.target.value);
+  }
+  handleTypeRadioChange(event) {
+    this.setState({ selectedType: event.target.value });
+    localStorage.setItem('SelectedType', event.target.value);
+  }
+  handleTimeframeRadioChange(event) {
+    this.setState({ timeframe: event.target.value });
+    localStorage.setItem('Timeframe', event.target.value);
+  }
+
+  //<!-- SUBMIT ACTION -->
+  handleSubmit(event) {
+    ReactDOM.render(
+      <div className="loading-msg">
+        <img src={gear} className="loading-img" alt="loading-img" />
+        <p>
+          Loading.... this may take a while depending on the search parameters,
+          please wait.....
+        </p>
+      </div>,
+      document.getElementById('results-display'),
+    );
+    ReactDOM.render(
+      <div className="cancel-btn">
+        <button
+          className="w3-button w3-red"
+          onClick={() => {
+            ReactDOM.render(
+              <div className="loading-msg">
+                <img src={gear} className="loading-img" alt="loading-img" />
+                <p>
+                  Cancelling, please wait. If search was taking too long, try
+                  more keywords!
+                </p>
+              </div>,
+              document.getElementById('results-display'),
+            );
+            this.setState = initialState;
+            window.location.reload();
+          }}
+        >
+          Cancel
+        </button>
+      </div>,
+      document.getElementById('search-form'),
+    );
+
+    let keywords = this.state.keywords;
+    let condition = this.state.selectedOption;
+    let listingType = this.state.selectedType;
+    let timeframe = this.state.timeframe;
+
+    let items = dh.thisDataHelper.getResults(
+      keywords,
+      timeframe,
+      condition,
+      listingType,
+    );
+
+    items
+      .then(response => {
+        if (response) {
+          console.log('$$$$$$$$$$$$$$$$ app js');
+          console.log(response);
+          //get the first 2 items for now
+          const items = response.slice(0, 2);
+          const resultsContent = <Items items={items} />;
+
+          ReactDOM.render(
+            resultsContent,
+            document.getElementById('results-display'),
+          );
+          ReactDOM.render(
+            <div className="cancel-btn">
+              <button
+                className="w3-button w3-green"
+                onClick={() => {
+                  window.location.reload();
+                }}
+              >
+                New Search
+              </button>
+            </div>,
+            document.getElementById('search-form'),
+          );
+        } else {
+          const analysis = dh.thisDataHelper.returnAnalysis(response);
+          const possibleKeywords = getKeywordCombos(analysis.keywords);
+          const keywordsList = possibleKeywords.map(keyword => {
+            return <li>{keyword}</li>;
+          });
+
+          const noResultsContent = (
+            <div className="w3-card-4">
+              <header className="w3-container w3-blue">
+                <h1>No results found for "{analysis.keywords}"</h1>
+              </header>
+
+              <div className="w3-container">
+                <p>Try different keywords or less specific keywords.</p>
+                <p>
+                  For instance, instead of "{analysis.keywords}" perhaps try:
+                </p>
+                <ul>{keywordsList}</ul>
+              </div>
+            </div>
+          );
+          ReactDOM.render(
+            noResultsContent,
+            document.getElementById('results-display'),
+          );
+          ReactDOM.render(
+            <div className="cancel-btn">
+              <button
+                className="w3-button w3-green"
+                onClick={() => {
+                  this.setState(initialState);
+                  window.location.reload();
+                }}
+              >
+                New Search
+              </button>
+            </div>,
+            document.getElementById('search-form'),
+          );
+        }
+      })
+      .catch(err => {
+        console.log(`Error: ${err}`);
+      });
+    event.preventDefault();
+  }
+
+  //<!-- RENDER, FORM -->
+  render() {
+    return (
+      <form id="searchForm" onSubmit={this.handleSubmit}>
+        <label className="searchLabel">Search Keywords:</label>
+        <input
+          className="w3-input w3-border"
+          type="text"
+          value={this.state.keywords}
+          onChange={this.handleInputChange}
+        />
+        <div className="groups">
+          <div className="left-grp">
+            <div className="control-group">
+              <h4>Condition</h4>
+              <label className="control control--radio">
+                New
+                <input
+                  type="radio"
+                  name="condition"
+                  value="New"
+                  checked={this.state.selectedOption === 'New'}
+                  onChange={this.handleConditionRadioChange}
+                />
+                <div className="control__indicator"></div>
+              </label>
+              <label className="control control--radio">
+                Used
+                <input
+                  type="radio"
+                  name="condition"
+                  value="Used"
+                  checked={this.state.selectedOption === 'Used'}
+                  onChange={this.handleConditionRadioChange}
+                />
+                <div className="control__indicator"></div>
+              </label>
+              <label className="control control--radio">
+                Seller Refurb
+                <input
+                  type="radio"
+                  name="condition"
+                  value="Seller Refurbished"
+                  checked={this.state.selectedOption === 'Seller Refurbished'}
+                  onChange={this.handleConditionRadioChange}
+                />
+                <div className="control__indicator"></div>
+              </label>
+              <label className="control control--radio">
+                Mfg Refurb
+                <input
+                  type="radio"
+                  name="condition"
+                  value="Manufacturer Refurbished"
+                  checked={
+                    this.state.selectedOption === 'Manufacturer Refurbished'
+                  }
+                  onChange={this.handleConditionRadioChange}
+                />
+                <div className="control__indicator"></div>
+              </label>
+            </div>
+          </div>
+          <div className="mid-grp">
+            <div className="control-group">
+              <h4>Timeframe</h4>
+              <label className="control control--radio">
+                30-days
+                <input
+                  type="radio"
+                  name="timeframe"
+                  value="30"
+                  checked={this.state.timeframe === '30'}
+                  onChange={this.handleTimeframeRadioChange}
+                />
+                <div className="control__indicator"></div>
+              </label>
+              <label className="control control--radio">
+                60-days
+                <input
+                  type="radio"
+                  name="timeframe"
+                  value="60"
+                  checked={this.state.timeframe === '60'}
+                  onChange={this.handleTimeframeRadioChange}
+                />
+                <div className="control__indicator"></div>
+              </label>
+            </div>
+          </div>
+          <div className="right-grp">
+            <div className="control-group">
+              <h4>Listing Type</h4>
+              <label className="control control--radio">
+                Auction
+                <input
+                  type="radio"
+                  name="listingType"
+                  value="Auction"
+                  checked={this.state.selectedType === 'Auction'}
+                  onChange={this.handleTypeRadioChange}
+                />
+                <div className="control__indicator"></div>
+              </label>
+              <label className="control control--radio">
+                Fixed Price
+                <input
+                  type="radio"
+                  name="listingType"
+                  value="Fixed"
+                  checked={this.state.selectedType === 'Fixed'}
+                  onChange={this.handleTypeRadioChange}
+                />
+                <div className="control__indicator"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <input className="w3-button w3-green" type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+
+function getKeywordCombos(keywordString) {
+  const regex = /(?:\w+)/g;
+  const str = keywordString;
+  let m;
+  let mArr = [];
+
+  while ((m = regex.exec(str)) !== null) {
+    // This is necessary to avoid infinite loops with zero-width matches
+    if (m.index === regex.lastIndex) {
+      regex.lastIndex++;
+    }
+
+    // The result can be accessed through the `m`-variable.
+    m.forEach(match => {
+      mArr.push(match);
+    });
+  }
+
+  let len = mArr.length;
+
+  function* keywordCombos(arr) {
+    function* generateKeywords(offset, combo) {
+      yield combo;
+      for (let i = offset; i < arr.length; i++) {
+        yield* generateKeywords(i + 1, combo.concat(arr[i]));
+      }
+    }
+    yield* generateKeywords(0, []);
+  }
+
+  let genKeywords = [];
+  for (let combo of keywordCombos(mArr)) {
+    genKeywords.push(combo);
+  }
+  genKeywords = genKeywords.filter(n => {
+    return n.length !== 0 && n.length !== len;
+  });
+  genKeywords = genKeywords.map(keyword => {
+    return keyword.join(' ');
+  });
+  return genKeywords;
+}
+
+export default Form;

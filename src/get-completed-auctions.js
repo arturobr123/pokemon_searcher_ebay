@@ -14,7 +14,6 @@ let baseUri = "https://svcs.ebay.com/services/search/FindingService/v1?OPERATION
     "&itemFilter(0).value=USD" +
     "&itemFilter(1).value=";
 
-//IT WORKS, PASTE THIS IN CHROME (check console to see url when do a search)
 let getSingleItemUri = "https://open.api.ebay.com/shopping?callname=GetSingleItem" + 
 "&responseencoding=JSON" + 
 "&appid=" + EBAY_APP_ID + 
@@ -22,8 +21,6 @@ let getSingleItemUri = "https://open.api.ebay.com/shopping?callname=GetSingleIte
 "&version=967" + 
 "&ItemID=353323119335"; //we need to pass this item id (we got this from previous query (baseUri))
 
-//RIGHT NOT IS NOT WORKING, BUT WHEN I SEARCH, IN THE CONSOLE, THE URL WILL BE LOG,
-//COPY THAT URL AND PASTE IT IN CHROME, I SHOULD SEE THE JSON RESULTS
 
 function initialApiCall(uri) {
   return axios.get(uri)
@@ -52,6 +49,8 @@ async function getCompletedEbayItems(keywords, days, condition) {
     }
   
   let timeframe = setTimeframe(days);
+
+  //ADD FILTERS TO URL
   baseUri = baseUri + timeframe + conditionFilter + "&keywords=";
   keywords = keywords.replace(/ /g, '%20');
   let uri = baseUri + keywords;
@@ -67,36 +66,11 @@ async function getCompletedEbayItems(keywords, days, condition) {
   console.log(requestedValueJson);
 
   //this return the array of items :)
-  console.log(requestedValueJson.findItemsByKeywordsResponse[0].searchResult[0].item);
+  //console.log(requestedValueJson.findItemsByKeywordsResponse[0].searchResult[0].item);
 
   const items = requestedValueJson.findItemsByKeywordsResponse[0].searchResult[0].item;
 
   return items;
-
-  // let responses = async() => {
-  //   const returnedItems = initialApiCall(uri)
-  //       .then(response => {
-  //         let pageCount = response.data.findCompletedItemsResponse[0].paginationOutput[0].totalPages[0];
-  //         // limit pagination to 50 from results
-  //         if (pageCount > 50){ pageCount = 50 };
-          
-  //         // let totalItems = response.data.findCompletedItemsResponse[0].paginationOutput[0].totalEntries[0];
-  //         // console.log('Total completed items: ' + totalItems);
-  //         // console.log('Paginated results: ' + pageCount);
-        
-  //         let promiseArray = [];
-  //         for (let i = 0; i < pageCount; i++) {
-  //           let pageNum = i + 1;
-  //           promiseArray.push(getPageItems(uri, pageNum));
-  //         }
-  //         return Promise.all(promiseArray);
-  //       })
-  //       .catch(err => {
-  //         console.log(err)
-  //       });
-  //   return returnedItems;
-  // }
-  // return await responses();
 }
 
 function setTimeframe(days){

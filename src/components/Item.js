@@ -2,6 +2,7 @@ import React from 'react';
 
 import './styles/ImageItem.css';
 import ImageItem from './ImageItem';
+import ItemInfo from "./ItemInfo";
 
 class Item extends React.Component {
   render() {
@@ -14,10 +15,14 @@ class Item extends React.Component {
           <h1>
             {item.title}
           </h1>
+
+          <br/>
+
+          <h5>{item.subtitle}</h5>
         </div>
 
         <div className='Badge__section-info'>
-          <h3>{item.subtitle}</h3>
+          <ItemInfo />
         </div>
       </div>
     );
